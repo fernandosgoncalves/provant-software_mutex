@@ -28,7 +28,7 @@ namespace proVant{
 		float dotRoll;
 		float dotPitch;
 		float dotYaw;
-	} atitude;
+	} attitude;
 
 	typedef struct {
 		float x;

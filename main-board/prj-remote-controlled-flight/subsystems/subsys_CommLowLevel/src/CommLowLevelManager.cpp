@@ -99,7 +99,7 @@ void CommLowLevelManager::Run()
     int count = 0;
     int times[1000];
     // Algumas variaveis... 
-    proVant::atitude atitude, atitude_aux;
+    proVant::attitude atitude, atitude_aux;
     proVant::position position, position_aux;
     proVant::servos_state servos, servos_aux;
     proVant::debug debug, debug_aux;
@@ -156,7 +156,6 @@ void CommLowLevelManager::Run()
 
     	//rcNormalize= PROVANT.getVantData().getNormChannels();
     	status=PROVANT.getVantData().getStatus();
-
 
     	//Send Control to Discovery
     	actuation = controlDataInterface->get_controlOutput();

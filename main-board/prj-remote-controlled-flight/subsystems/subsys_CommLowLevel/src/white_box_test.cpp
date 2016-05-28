@@ -56,7 +56,7 @@ CommLowLevelManager *   module1;
 
 void testThread() {
     std::string msg("Test message!");
-    proVant::atitude atitude, atd;
+    proVant::attitude atitude, atd;
     atitude.roll = 0;
     atitude.pitch = 0;
     atitude.yaw = 0;

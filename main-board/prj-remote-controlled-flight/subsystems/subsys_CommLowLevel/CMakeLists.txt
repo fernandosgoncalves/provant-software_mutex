@@ -35,6 +35,7 @@ set(PROJECT_DOC_DIR	"${CMAKE_CURRENT_LIST_DIR}/doc")
 set(PROJECT_COMMON_DIR		"${CMAKE_CURRENT_LIST_DIR}/../../common")
 set(PROJECT_COMMON_DIR_SUBSYS	"${CMAKE_CURRENT_LIST_DIR}/../common")
 
+
 # Building the project tree
 file(MAKE_DIRECTORY ${PROJECT_CONFIG_DIR})
 file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR})
@@ -116,24 +117,24 @@ set(LIB_POSTFIX bundle)
 include_directories(
         ${PROJECT_INCLUDE_DIR}
         #${PROJECT_EXT_INCLUDE}
-        ${PROJECT_CONFIG_DIR}
-	${PROJECT_COMMON_DIR}/inc	
-	${PROJECT_COMMON_DIR_SUBSYS}/Provant/inc
 	${PROJECT_COMMON_DIR_SUBSYS}/BeagleInterface/inc
 	${PROJECT_COMMON_DIR_SUBSYS}/SysInterface/inc
-	${PROJECT_COMMON_DIR_SUBSYS}/Controller/inc
-	${PROJECT_COMMON_DIR_SUBSYS}/Models/inc
-	${PROJECT_COMMON_DIR_SUBSYS}/Trajectory/inc		
-        ${PROJECT_COMMON_DIR_SUBSYS}
 	${PROJECT_COMMON_DIR_SUBSYS}/qpOases/include
+	${PROJECT_COMMON_DIR_SUBSYS}/Controller/inc
+	${PROJECT_COMMON_DIR_SUBSYS}/Trajectory/inc		
+	${PROJECT_COMMON_DIR_SUBSYS}/Provant/inc
+	${PROJECT_COMMON_DIR_SUBSYS}/Models/inc
+        ${PROJECT_COMMON_DIR_SUBSYS}
+	${PROJECT_COMMON_DIR}/inc
         ${Boost_INCLUDE_DIRS}
+        ${PROJECT_CONFIG_DIR}
 )
 
 link_directories(
         ${Boost_LIBRARIES}
 	${PROJECT_COMMON_DIR_SUBSYS}/qpOases/bin
 	
-)
+	)
 
 add_executable(${PROJECT_NAME} ${MAIN_FILE} ${HDRS} ${SRCS})
 add_library("${PROJECT_NAME}_${LIB_POSTFIX}" ${HDRS} ${SRCS})

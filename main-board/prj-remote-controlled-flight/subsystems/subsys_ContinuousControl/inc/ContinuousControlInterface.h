@@ -39,7 +39,7 @@ public:
     ~ContinuousControlInterface();
 
     // Inboxes
-    MsgQueue<proVant::atitude> q_atitude_in;
+    MsgQueue<proVant::attitude> q_atitude_in;
     MsgQueue<proVant::position> q_position_in;
     MsgQueue<proVant::servos_state> q_servos_in;
     MsgQueue<proVant::debug> q_debug_in;

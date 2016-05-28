@@ -237,7 +237,7 @@ public:
 	int16_t getMag(int pos);
 	void setAcc(int pos, int16_t value);
 	int16_t getAcc(int pos);
-	proVant::atitude getAtitude();
+	proVant::attitude getAtitude();
 	proVant::position getPosition();
 	proVant::servos_state getServoState();
 	proVant::controlOutput getActuation();

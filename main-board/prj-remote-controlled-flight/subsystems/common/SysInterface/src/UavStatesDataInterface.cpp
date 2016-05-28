@@ -37,7 +37,7 @@ void UavStatesDataInterface::set_altitude(proVant::altitude data) {
 	q_mutex.unlock();
 }
 
-void UavStatesDataInterface::set_attitude(proVant::atitude data) {
+void UavStatesDataInterface::set_attitude(proVant::attitude data) {
 	q_mutex.lock();
 	this->atitude = data;
 	q_mutex.unlock();
@@ -73,8 +73,8 @@ proVant::altitude UavStatesDataInterface::get_altitude() {
 	return temp_data;
 }
 
-proVant::atitude UavStatesDataInterface::get_attitude() {
-	proVant::atitude temp_data;
+proVant::attitude UavStatesDataInterface::get_attitude() {
+	proVant::attitude temp_data;
 	q_mutex.lock();
 	temp_data = this->atitude;
 	q_mutex.unlock();

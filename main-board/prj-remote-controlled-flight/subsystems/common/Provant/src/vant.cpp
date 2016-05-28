@@ -594,8 +594,8 @@ float vant::getDotAlphar(){
 	return this->dotAlphar;
 }
 
-proVant::atitude vant::getAtitude(){
-	proVant::atitude atd;
+proVant::attitude vant::getAtitude(){
+	proVant::attitude atd;
 
 	atd.roll = this->getRoll();
 	atd.pitch = this->getPitch();

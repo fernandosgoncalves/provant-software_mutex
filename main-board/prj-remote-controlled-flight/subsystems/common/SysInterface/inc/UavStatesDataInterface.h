@@ -44,12 +44,12 @@ public:
 	void set_servo_states(proVant::servos_state data);
 	void set_position(proVant::position data);
 	void set_altitude(proVant::altitude data);
-	void set_attitude(proVant::atitude data);
+	void set_attitude(proVant::attitude data);
 	proVant::servos_state get_servo_states();
 	void set_escData(proVant::escData data);
 	proVant::position get_position();
 	proVant::altitude get_altitude();
-	proVant::atitude get_attitude();
+	proVant::attitude get_attitude();
 	proVant::escData get_escData();
 
 private:
@@ -57,7 +57,7 @@ private:
 	proVant::position position;
 	proVant::altitude altitude;
 	std::string name_;
-	proVant::atitude atitude;
+	proVant::attitude atitude;
 	proVant::escData escData;
 };
 

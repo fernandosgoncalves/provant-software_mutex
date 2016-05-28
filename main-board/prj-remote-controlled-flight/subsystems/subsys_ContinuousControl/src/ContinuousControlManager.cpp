@@ -102,7 +102,7 @@ void ContinuousControlManager::Run()
     int count = 0;
     int times[1000];
     // Algumas variaveis... 
-    proVant::atitude atitude;
+    proVant::attitude atitude;
     proVant::position position;
     proVant::servos_state servos;
     proVant::controlOutput actuation;

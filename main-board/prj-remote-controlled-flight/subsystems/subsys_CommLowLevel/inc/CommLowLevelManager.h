@@ -23,10 +23,10 @@
 #include "AbstractModuleManager.h"
 
 //Interface
-//#include "CommLowLevelInterface.h"
-#include "UavStatesDataInterface.h"
-#include "ControlDataInterface.h"
-#include "SystemDataInterface.h"
+#include "CommLowLevelInterface.h"
+//#include "UavStatesDataInterface.h"
+//#include "ControlDataInterface.h"
+//#include "SystemDataInterface.h"
 
 //Modulos (nao precisa, mas pode incluir todos os headers dos submodulos)
 //#include "uart.h"
@@ -42,10 +42,10 @@ public:
     ~CommLowLevelManager();
 
     // Interface do modulo
-    // CommLowLevelInterface * interface;
-    UavStatesDataInterface * uavStatesDataInterface;
-    SystemDataInterface * systemDataInterface;
-    ControlDataInterface * controlDataInterface;
+    CommLowLevelInterface * interface;
+    //UavStatesDataInterface * uavStatesDataInterface;
+    //SystemDataInterface * systemDataInterface;
+    //ControlDataInterface * controlDataInterface;
 
     /*! \brief Implementação do ponto de entrada do modulo.
      *
@@ -85,3 +85,4 @@ private:
  };
 
 #endif // COMMUNICATION_LOW_LEVEL_MANAGER_H
+
