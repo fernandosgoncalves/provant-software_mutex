@@ -23,6 +23,7 @@
 
 #include "proVantTypes.h"
 #include "RcNormalize.h"
+#include "Actuation.h"
 #include "Attitude.h"
 #include "Position.h"
 #include "Status.h"
@@ -68,16 +69,8 @@ public:
     //MsgQueue<proVant::status>* q_status_out_;
 
     // CommLowLevelManager consuming
-    MsgQueue<proVant::controlOutput> q_actuation_in;
-
-    //Dataprocesing Producing
-    //MsgQueue<proVant::attitude>* q_atitude2_out_;
-    //MsgQueue<proVant::position>* q_position2_out_;
-    //MsgQueue<proVant::servos_state>* q_servos2_out_;
-    //MsgQueue<proVant::debug>* q_debug2_out_;
-    //MsgQueue<proVant::rcNormalize>* q_rc2_out_;
-    //MsgQueue<proVant::status>* q_status2_out_;
-    //MsgQueue<proVant::controlOutput>* q_actuation2_out_;
+    Actuation q_actuation_in;
+    //MsgQueue<proVant::controlOutput> q_actuation_in;
 
 private:
     std::string name_;

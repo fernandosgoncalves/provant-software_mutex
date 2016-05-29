@@ -26,9 +26,6 @@
 #include "DataProcessingInterface.h"
 
 //Modulos (nao precisa, mas pode incluir todos os headers dos submodulos)
-#include "UavStatesDataInterface.h"
-#include "ControlDataInterface.h"
-#include "SystemDataInterface.h"
 #include "proVantProtocol.h"
 #include "provant_const.h"
 
@@ -42,10 +39,7 @@ public:
     ~DataProcessingManager();
 
     // Interface do modulo
-    //DataProcessingInterface * interface;
-    UavStatesDataInterface * uavStatesDataInterface;
-    SystemDataInterface * systemDataInterface;
-    ControlDataInterface * controlDataInterface;
+    DataProcessingInterface * interface;
 
     /*! \brief Implementação do ponto de entrada do modulo.
      *

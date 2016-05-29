@@ -13,13 +13,18 @@
  *
  */
 
-/*** Renomear .cpp e o .h com o nome do módulo + "Interface" (ex. DataProcessingInterface) ***/
-
 #ifndef CONTINUOUS_CONTROL_INTERFACE_H
 #define CONTINUOUS_CONTROL_INTERFACE_H
 
 //Father
 #include "AbstractMessageInterface.h"
+#include "RcNormalize.h"
+#include "Actuation.h"
+#include "Attitude.h"
+#include "Position.h"
+#include "Status.h"
+#include "Servo.h"
+#include "Debug.h"
 
 #include "proVantTypes.h"
 
@@ -32,23 +37,30 @@ class ContinuousControlInterface : public AbstractMessageInterface
 {
 public:
     ContinuousControlInterface(std::string name) :
-        q_actuation_out_(NULL),
-		q_actuation2_out_(NULL),
+        //q_actuation_out_(NULL),
+		//q_actuation2_out_(NULL),
         name_(name) { }
 
     ~ContinuousControlInterface();
 
     // Inboxes
-    MsgQueue<proVant::attitude> q_atitude_in;
-    MsgQueue<proVant::position> q_position_in;
-    MsgQueue<proVant::servos_state> q_servos_in;
-    MsgQueue<proVant::debug> q_debug_in;
-    MsgQueue<proVant::rcNormalize> q_rc_in;
-    MsgQueue<proVant::status> q_status_in;
+    Attitude q_attitude_in;
+    //MsgQueue<proVant::attitude> q_atitude_in;
+    Position q_position_in;
+    //MsgQueue<proVant::position> q_position_in;
+    Servo q_servos_in;
+    //MsgQueue<proVant::servos_state> q_servos_in;
+    Debug q_debug_in;
+    //MsgQueue<proVant::debug> q_debug_in;
+    RcNormalize q_rc_in;
+    //MsgQueue<proVant::rcNormalize> q_rc_in;
+    Status q_status_in;
+    //MsgQueue<proVant::status> q_status_in;
 
     // Outboxes (ponteiros para inboxes alheios)
-    MsgQueue<proVant::controlOutput>* q_actuation_out_;
-    MsgQueue<proVant::controlOutput>* q_actuation2_out_;
+    Actuation q_actuation_out_;
+    //MsgQueue<proVant::controlOutput>* q_actuation_out_;
+    //MsgQueue<proVant::controlOutput>* q_actuation2_out_;
 
 private:
     std::string name_;

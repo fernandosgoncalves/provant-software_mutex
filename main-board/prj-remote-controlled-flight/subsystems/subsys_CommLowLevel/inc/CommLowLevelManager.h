@@ -13,9 +13,6 @@
  *
  */
 
-
-/*** Renomear .cpp e o .h com o nome do módulo + "Module" (ex. ContinuousControlModule) ***/
-
 #ifndef COMMUNICATION_LOW_LEVEL_MANAGER_H
 #define COMMUNICATION_LOW_LEVEL_MANAGER_H
 
@@ -24,12 +21,8 @@
 
 //Interface
 #include "CommLowLevelInterface.h"
-//#include "UavStatesDataInterface.h"
-//#include "ControlDataInterface.h"
-//#include "SystemDataInterface.h"
 
 //Modulos (nao precisa, mas pode incluir todos os headers dos submodulos)
-//#include "uart.h"
 #include "proVantProtocol.h"
 
 /*! \brief Gerenciador padrão para módulos.
@@ -43,9 +36,6 @@ public:
 
     // Interface do modulo
     CommLowLevelInterface * interface;
-    //UavStatesDataInterface * uavStatesDataInterface;
-    //SystemDataInterface * systemDataInterface;
-    //ControlDataInterface * controlDataInterface;
 
     /*! \brief Implementação do ponto de entrada do modulo.
      *
@@ -63,8 +53,6 @@ private:
     proVantProtocol PROVANT;
     FILE * LOWLEVEL;
     char file[20];
-
-//    uart UART;
 
     /***** Atributos e metodos especificos da topologia do modulo *****/
 
@@ -85,4 +73,3 @@ private:
  };
 
 #endif // COMMUNICATION_LOW_LEVEL_MANAGER_H
-

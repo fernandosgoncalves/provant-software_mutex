@@ -29,15 +29,10 @@
 #include <boost/type_traits.hpp>
 
 //Interface
-//#include "ContinuousControlInterface.h"
-#include "UavStatesDataInterface.h"
-#include "ControlDataInterface.h"
-#include "SystemDataInterface.h"
+#include "ContinuousControlInterface.h"
 #include "MpcControler.h"
 #include "MpcBirotor.h"
 #include "MpcLoad.h"
-
-//Modulos (nao precisa, mas pode incluir todos os headers dos submodulos)
 
 /*! \brief Gerenciador padrão para módulos.
  *
@@ -49,10 +44,7 @@ public:
     ~ContinuousControlManager();
 
     // Interface do modulo
-    //ContinuousControlInterface * interface;
-    UavStatesDataInterface * uavStatesDataInterface;
-    SystemDataInterface * systemDataInterface;
-    ControlDataInterface * controlDataInterface;
+    ContinuousControlInterface * interface;
 
     /*! \brief Implementação do ponto de entrada do modulo.
      *

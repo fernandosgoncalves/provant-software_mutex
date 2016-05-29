@@ -27,15 +27,9 @@
 using namespace std;
 
 CommLowLevelManager::CommLowLevelManager(std::string name) :
-	uavStatesDataInterface(new UavStatesDataInterface("CommLowLevel:inInterface")),
-	controlDataInterface(new ControlDataInterface("CommLowLevel:outInterface")),
-	systemDataInterface(new SystemDataInterface("CommLowLevel:outInterface")),
+	interface(new CommLowLevelInterface("CommLowLevel:Interface")),
     ms_sample_time(6),
     name_(name)
-//    interface(new CommLowLevelInterface("CommLowLevel:Interface")),
-//    // sm1(new SubModule1), // talvez fosse mais interessante construir os submodulos no init
-//    ms_sample_time(6),
-//    name_(name)
 {
 
 }
@@ -62,7 +56,6 @@ void CommLowLevelManager::Init()
 
     /// Neste caso, conectar a notificacao da interface com o callback da classe
     // interface->q_in.notification.connect( boost::bind(&DataProcessingManager::inboxCallback,out this) );
-
 }
 
 void CommLowLevelManager::Log() {
@@ -99,13 +92,13 @@ void CommLowLevelManager::Run()
     int count = 0;
     int times[1000];
     // Algumas variaveis... 
-    proVant::attitude atitude, atitude_aux;
+    proVant::rcNormalize rcNormalize, rcNormalize_aux;
+    proVant::controlOutput actuation2, actuation2_aux;
     proVant::position position, position_aux;
     proVant::servos_state servos, servos_aux;
-    proVant::debug debug, debug_aux;
-    proVant::rcNormalize rcNormalize, rcNormalize_aux;
+    proVant::attitude atitude, atitude_aux;
     proVant::controlOutput actuation;
-    proVant::controlOutput actuation2, actuation2_aux;
+    proVant::debug debug, debug_aux;
     proVant::status status;
 
     float data1[2]={};
@@ -113,12 +106,13 @@ void CommLowLevelManager::Run()
     float data3[2]={};
     int i = 0, flag=0;
 
-    actuation.servoLeft=0;
-    actuation.servoRight=0;
-    actuation.escLeftNewtons=0;
     actuation.escRightNewtons=0;
-    actuation.escLeftSpeed=0;
+    actuation.escLeftNewtons=0;
     actuation.escRightSpeed=0;
+    actuation.escLeftSpeed=0;
+    actuation.servoRight=0;
+    actuation.servoLeft=0;
+
     // Loop principal!
     while(1) {
     	start= boost::chrono::system_clock::now();
@@ -149,16 +143,11 @@ void CommLowLevelManager::Run()
     		debug=debug_aux;
     	}
 
-//    	debug.debug[0]=10;
-//    	debug.debug[1]=20;
-//    	debug.debug[2]=30;
-//    	debug.debug[3]=40;
-
-    	//rcNormalize= PROVANT.getVantData().getNormChannels();
     	status=PROVANT.getVantData().getStatus();
 
     	//Send Control to Discovery
-    	actuation = controlDataInterface->get_controlOutput();
+    	actuation = interface->q_actuation_in.getActuation()
+    			//controlDataInterface->get_controlOutput();
     	//if(interface->pop(actuation, &interface->q_actuation_in)){
     		/*Control*/
     		data1[0]= actuation.servoLeft;
@@ -171,26 +160,18 @@ void CommLowLevelManager::Run()
     		PROVANT.multwii_sendstack();
     	//}
 
-    	uavStatesDataInterface->set_position(position);
-    	//interface->push(position, interface->q_position_out_);
-    	uavStatesDataInterface->set_attitude(atitude);
-    	//interface->push(atitude, interface->q_atitude_out_);
-    	uavStatesDataInterface->set_servo_states(servos);
-    	//interface->push(servos, interface->q_servos_out_);
-    	systemDataInterface->set_debug(debug);
-    	//interface->push(debug, interface->q_debug_out_);
-    	systemDataInterface->set_rcNormalize(rcNormalize);
-    	//interface->push(rcNormalize, interface->q_rc_out_);
-    	systemDataInterface->set_status(status);
-    	//interface->push(status,interface->q_status_out_);
-
-    	/*interface->push(position, interface->q_position2_out_);
-    	interface->push(atitude, interface->q_atitude2_out_);
-    	interface->push(servos, interface->q_servos2_out_);
-    	interface->push(debug, interface->q_debug2_out_);
-    	interface->push(rcNormalize, interface->q_rc2_out_);
-    	interface->push(actuation2, interface->q_actuation2_out_);
-    	interface->push(status,interface->q_status2_out_);*/
+    	interface->q_position_out_.setPosition(position);
+    	//uavStatesDataInterface->set_position(position);
+    	interface->q_attitude_out_.setAttitude(atitude);
+    	//uavStatesDataInterface->set_attitude(atitude);
+    	interface->q_servos_out_.setServoStates(servos);
+    	//uavStatesDataInterface->set_servo_states(servos);
+    	interface->q_debug_out_.setDebug(debug);
+    	//systemDataInterface->set_debug(debug);
+    	interface->q_rc_out_.setRcNormalize(rcNormalize);
+    	//systemDataInterface->set_rcNormalize(rcNormalize);
+    	interface->q_status_out_.setStatus(status);
+    	//systemDataInterface->set_status(status);
 
     	//Elapsed time code
 //    	auto end = std::chrono::steady_clock::now();
@@ -216,7 +197,6 @@ void CommLowLevelManager::Run()
     		fclose(this->LOWLEVEL);
     		count = 0;
     	}
-
     	boost::this_thread::sleep_until(boost::chrono::system_clock::now() + boost::chrono::microseconds((ms_sample_time*1000)-elapsed.count()));
     }
 }
@@ -225,4 +205,3 @@ void CommLowLevelManager::inboxCallback()
 {
     DEBUG(LEVEL_INFO, "Got message! ") << name_;
 }
-

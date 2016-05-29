@@ -28,10 +28,7 @@ using namespace loadmodel;
 using namespace std;
 
 ContinuousControlManager::ContinuousControlManager(std::string name) :
-    uavStatesDataInterface(new UavStatesDataInterface("CommLowLevel:inInterface")),
-	controlDataInterface(new ControlDataInterface("CommLowLevel:outInterface")),
-	systemDataInterface(new SystemDataInterface("CommLowLevel:outInterface")),
-    //interface(new ContinuousControlInterface("ContinuousControl:Interface")),
+    interface(new ContinuousControlInterface("ContinuousControl:Interface")),
     // sm1(new SubModule1), // talvez fosse mais interessante construir os submodulos no init
     ms_sample_time(12),
     name_(name)
@@ -102,19 +99,21 @@ void ContinuousControlManager::Run()
     int count = 0;
     int times[1000];
     // Algumas variaveis... 
-    proVant::attitude atitude;
-    proVant::position position;
-    proVant::servos_state servos;
     proVant::controlOutput actuation;
-    proVant::debug debug;
     proVant::rcNormalize rcNormalize;
+    proVant::servos_state servos;
+    proVant::position position;
+    proVant::attitude attitude;
     proVant::status status;
+    proVant::debug debug;
     int i=0;
+
     // Matrix class
     MatrixXf xs(16,1);
-    MatrixXf ref(3,1);
-    MatrixXf channels(4,1);
-    MatrixXf u(4,1);
+    Matrix'Xf ref(3,1);
+    Matrix'Xf channels(4,1);
+    Matrix'Xf u(4,1);
+
     start = boost::chrono::system_clock::now();
     last_start = boost::chrono::system_clock::now();
 
@@ -127,68 +126,26 @@ void ContinuousControlManager::Run()
     	auto sample_time = boost::chrono::duration_cast<boost::chrono::microseconds>(start-last_start);
     	last_start=start;
 
-    	atitude = uavStatesDataInterface->get_attitude();
-    	//if(interface->pop(atitude, &interface->q_atitude_in)){
-    		/*Atitude*/
-//    		cout<<"Atitude Received C"<<endl;
-//    		cout<<"Roll= "<<atitude.roll<<endl;
-//    		cout<<"Pitch= "<<atitude.pitch<<endl;
-//    		cout<<"Yaw= "<<atitude.yaw<<endl;
-//    		cout<<"dotRoll= "<<atitude.dotRoll<<endl;
-//    		cout<<"dotPitch= "<<atitude.dotPitch<<endl;
-//    		cout<<"dotYaw= "<<atitude.dotYaw<<endl;
-    	//}
-    	position = uavStatesDataInterface->get_position();
-    	//if(interface->pop(position, &interface->q_position_in)){
-    		/*Position*/
-//    		cout<<"Position Received C"<<endl;
-//    		cout<<"X= "<<position.x<<endl;
-//    		cout<<"Y= "<<position.y<<endl;
-//    		cout<<"Z= "<<position.z<<endl;
-//    		cout<<"dotX= "<<position.dotX<<endl;
-//    		cout<<"dotY= "<<position.dotY<<endl;
-//    		cout<<"dotZ= "<<position.dotZ<<endl;
-    	//}
-    	servos = uavStatesDataInterface->get_servo_states();
-    	//if(interface->pop(servos, &interface->q_servos_in)){
-    		/*Servos*/
-//    		cout<<"Servos Received C"<<endl;
-//    		cout<<"Alphal= "<<servos.alphal<<endl;
-//    		cout<<"Alphar= "<<servos.alphar<<endl;
-//    		cout<<"dotAlphal= "<<servos.dotAlphal<<endl;
-//    		cout<<"dotAlphar= "<<servos.dotAlphar<<endl;
-    	//}
-    	debug = systemDataInterface->get_debug();
-    	//if(interface->pop(debug, &interface->q_debug_in)){
-    		/*Servos*/
-    	//  cout<<"Servos Received C"<<endl;
-    	//  cout<<"Debug 1= "<<debug.debug[0]<<endl;
-    	//  cout<<"Alphar= "<<servos.alphar<<endl;
-    	//  cout<<"dotAlphal= "<<servos.dotAlphal<<endl;
-    	//  cout<<"dotAlphar= "<<servos.dotAlphar<<endl;
-    	//}
-    	rcNormalize = systemDataInterface->get_rcNormalize();
-    	//if(interface->pop(rcNormalize, &interface->q_rc_in)){
-    	   	/*Servos*/
-    	//	cout<<"channel[1]"<<rcNormalize.normChannels[1]<<endl;
-    	//	cout<<"Alphar= "<<servos.alphar<<endl;
-    	//  cout<<"dotAlphal= "<<servos.dotAlphal<<endl;
-    	//  cout<<"dotAlphar= "<<servos.dotAlphar<<endl;
-    	//}
-    	status = systemDataInterface->get_status();
-    	//if(interface->pop(status, &interface->q_status_in)){
-    	/*Servos*/
-    	//	cout<<"channel[1]"<<rcNormalize.normChannels[1]<<endl;
-    	//	cout<<"Alphar= "<<servos.alphar<<endl;
-    	//  cout<<"dotAlphal= "<<servos.dotAlphal<<endl;
-    	//  cout<<"dotAlphar= "<<servos.dotAlphar<<endl;
-    	//}
+    	attitude = interface->q_attitude_in.getAttitude();
+    	//atitude = uavStatesDataInterface->get_attitude();
+    	position = interface->q_position_in.getPosition();
+    	//position = uavStatesDataInterface->get_position();
+    	servos = interface->q_servos_in.getServoStates();
+    	//servos = uavStatesDataInterface->get_servo_states();
+    	debug = interface->q_debug_in.getDebug();
+    	//debug = systemDataInterface->get_debug();
+    	rcNormalize = interface->q_rc_in.getRcNormalize();
+    	//rcNormalize = systemDataInterface->get_rcNormalize();
+    	status = interface->q_status_in.getStatus();
+    	//status = systemDataInterface->get_status();
+
     	channels.setZero();
     	channels<<rcNormalize.normChannels[0],rcNormalize.normChannels[1],rcNormalize.normChannels[2],rcNormalize.normChannels[3];
     	xs.setZero();
     	xs<<position.x,position.y,position.z,atitude.roll,atitude.pitch,atitude.yaw,servos.alphar,servos.alphal
     			,position.dotX,position.dotY,position.dotZ,atitude.dotRoll,atitude.dotPitch,atitude.dotYaw,servos.dotAlphar,servos.dotAlphal;
     	ref<<(float)debug.debug[0]/100.0,(float)debug.debug[1]/100.0,(float)debug.debug[2]/100.0;
+
     	//std::cout<<ref<<std::endl;
     	//u=mpc->Controler(xs);
 
@@ -196,7 +153,6 @@ void ContinuousControlManager::Run()
     	//u=mpcload->Controler(xs);
     	//u=mpcbirotor->Controler(xs,status.stop);
     	//u=test->Controler(channels);
-
 
     	/////////////////////////////////
     	//std::cout<<u<<std::endl;
@@ -207,9 +163,8 @@ void ContinuousControlManager::Run()
     	actuation.escLeftSpeed=0;
     	actuation.escRightSpeed=0;
 
-    	controlDataInterface->set_controlOutput(actuation);
-    	//interface->push(actuation, interface->q_actuation_out_);
-    	//interface->push(actuation, interface->q_actuation2_out_);
+    	interface->q_actuation_out_.setActuation(actuation);
+    	//controlDataInterface->set_controlOutput(actuation);
 
     	//std::cout << "sp_thread2: " << sample_time.count()<< " microseconds." << std::endl;
     	i++;
@@ -238,4 +193,3 @@ void ContinuousControlManager::inboxCallback()
 {
     DEBUG(LEVEL_INFO, "Got message! ") << name_;
 }
-
